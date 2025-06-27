@@ -1,24 +1,20 @@
-# Etapa 1: build
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiamos todo el proyecto
+# Copiamos solo el proyecto
 COPY . .
 
-# RUTA DEL PROYECTO
-WORKDIR /src/ResultadoAPI
+# Restauramos paquetes desde la carpeta actual
+RUN dotnet restore "./ResultadosAPI.csproj"
 
-# Restauramos paquetes
-RUN dotnet restore
+# Publicamos la app
+RUN dotnet publish "./ResultadosAPI.csproj" -c Release -o /app/publish
 
-# Compilamos para producción
-RUN dotnet publish -c Release -o /app/publish
-
-# Etapa 2: runtime
+# Etapa de runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Railway usa el puerto 80
 EXPOSE 80
-ENTRYPOINT ["dotnet", "ResultadoAPI.dll"]
+ENTRYPOINT ["dotnet", "ResultadosAPI.dll"]
