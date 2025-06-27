@@ -1,0 +1,6 @@
+{
+  "build": {
+    "builder": "docker",
+    "dockerfilePath": "ResultadosAPI/ResultadosAPI/Dockerfile"
+  }
+}
